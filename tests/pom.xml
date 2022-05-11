@@ -5,12 +5,15 @@
     <parent>
         <artifactId>easy-boot</artifactId>
         <groupId>io.github.wendy512</groupId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-
+    <modules>
+        <module>test-starter</module>
+    </modules>
+    
     <artifactId>easy-boot-tests</artifactId>
-
+    
 
 </project>
