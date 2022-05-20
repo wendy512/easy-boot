@@ -1,10 +1,11 @@
 package io.github.wendy512.redis.serializer;
 
-import io.github.wendy512.common.serialization.SerializeSelector;
-import io.github.wendy512.common.serialization.SerializeType;
-import io.github.wendy512.common.serialization.Serializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
+
+import io.github.wendy512.serialization.SerializeSelector;
+import io.github.wendy512.serialization.SerializeType;
+import io.github.wendy512.serialization.Serializer;
 
 /**
  * redis protostuff 序列化
@@ -17,11 +18,11 @@ public class RedisProtoStuffSerializer<T> implements RedisSerializer<T> {
 
     @Override
     public byte[] serialize(T t) throws SerializationException {
-        return serializer.serialize(t);
+        return SerializeUtil.serialize(serializer, t);
     }
 
     @Override
     public T deserialize(byte[] bytes) throws SerializationException {
-        return (T) serializer.deserialize(bytes);
+        return SerializeUtil.deserialize(serializer, bytes);
     }
 }

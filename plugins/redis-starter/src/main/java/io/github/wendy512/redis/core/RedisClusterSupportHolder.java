@@ -4,19 +4,20 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import io.github.wendy512.redis.RedisConnectionFactoryBuilder;
 import org.springframework.data.redis.connection.RedisClusterNode;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisClusterConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 
+import io.github.wendy512.redis.RedisConnectionFactoryBuilder;
 import io.github.wendy512.redis.RedisMode;
 import io.github.wendy512.redis.config.InstanceConfig;
 import io.github.wendy512.redis.config.PoolConfig;
 import lombok.extern.slf4j.Slf4j;
-import redis.clients.jedis.util.JedisClusterCRC16;
+import redis.clients.util.JedisClusterCRC16;
 
 /**
  * redis 集群管理
@@ -27,10 +28,10 @@ import redis.clients.jedis.util.JedisClusterCRC16;
  */
 @Slf4j
 public class RedisClusterSupportHolder {
-    private RedisConnectionFactory connectionFactory;
+    private final RedisConnectionFactory connectionFactory;
     private long timeout;
     private String password;
-    private PoolConfig poolConfig;
+    private final PoolConfig poolConfig;
     private Map<String, RedisClusterNodeExtension> clusterNodes = new ConcurrentHashMap<>();
     private Map<String, RedisClusterNodeExtension> masterNodes = new ConcurrentHashMap<>();
 
@@ -51,7 +52,8 @@ public class RedisClusterSupportHolder {
     }
 
     private void init() {
-        Iterable<RedisClusterNode> redisClusterNodes = connectionFactory.getClusterConnection().clusterGetNodes();
+        JedisClusterConnection clusterConnection = (JedisClusterConnection) connectionFactory.getClusterConnection();
+        Iterable<RedisClusterNode> redisClusterNodes = clusterConnection.clusterGetNodes();
         redisClusterNodes.forEach(node -> {
             RedisConnectionFactory connectionFactory = getConnectionFactory(node);
             RedisClusterNodeExtension nodeExtension =

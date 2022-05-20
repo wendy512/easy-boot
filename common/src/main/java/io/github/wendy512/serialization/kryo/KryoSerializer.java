@@ -1,4 +1,4 @@
-package io.github.wendy512.common.serialization.impl;
+package io.github.wendy512.serialization.kryo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,8 +7,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import io.github.wendy512.common.serialization.SerializationException;
-import io.github.wendy512.common.serialization.Serializer;
+import io.github.wendy512.serialization.SerializationException;
+import io.github.wendy512.serialization.Serializer;
 
 /**
  * Kryo 序列化器，序列化类必须实现{@link java.io.Serializable}
@@ -16,7 +16,7 @@ import io.github.wendy512.common.serialization.Serializer;
  * @date 2021-05-18 11:25:11:25
  * @since 1.0.0
  */
-public class KryoSerializer<T> implements Serializer<T> {
+public class KryoSerializer implements Serializer {
 
     private static final ThreadLocal<Kryo> KRYO_LOCAL = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
@@ -30,7 +30,7 @@ public class KryoSerializer<T> implements Serializer<T> {
     });
 
     @Override
-    public byte[] serialize(T t) throws SerializationException {
+    public <T> byte[] serialize(T t) throws SerializationException {
         Kryo kryo = KRYO_LOCAL.get();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] ret;
@@ -54,9 +54,15 @@ public class KryoSerializer<T> implements Serializer<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
         Kryo kryo = KRYO_LOCAL.get();
         return kryo.readObject(new Input(bytes), clazz);
+    }
+
+    @Override
+    public <T> T deserialize(byte[] bytes) throws SerializationException {
+        Kryo kryo = KRYO_LOCAL.get();
+        return (T)kryo.readObject(new Input(bytes), kryo.readClass(new Input(bytes)).getType());
     }
 
 }

@@ -28,22 +28,28 @@ public class InstanceConfig {
     private String password;
     private long timeout = 30 * 1000;
     private String keySerializer = "org.springframework.data.redis.serializer.StringRedisSerializer";
-    private String valueSerializer = "org.springframework.data.redis.serializer.JdkSerializationRedisSerializerr";
+    private String valueSerializer = "org.springframework.data.redis.serializer.StringRedisSerializer";
     private String hashKeySerializer = "org.springframework.data.redis.serializer.StringRedisSerializer";
-    private String hashValueSerializer = "org.springframework.data.redis.serializer.JdkSerializationRedisSerializer";
+    private String hashValueSerializer = "org.springframework.data.redis.serializer.StringRedisSerializer";
     private String master;
     /**
      * 哨兵模式
      */
     private boolean enableSentinel = false;
+    /**
+     * 是否开启隐射容器中的节点IP和Port
+     */
+    private boolean enableNodeMapping = false;
+    /**
+     * 是否启用数据压缩
+     */
+    private boolean enableCompress = false;
 
-    private List<NodeConfig> sentinelNodes;
+    private List<NodeConfig> nodes;
 
     /**
      * 集群模式
      */
     private boolean enableCluster = false;
-
-    private List<NodeConfig> clusterNodes;
 
 }

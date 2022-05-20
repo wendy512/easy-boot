@@ -22,7 +22,6 @@ import io.github.wendy512.redis.core.RedisApplicationContext;
 import io.github.wendy512.redis.core.RedisClusterSupportHolder;
 import io.github.wendy512.redis.core.RedisTemplateClusterExtension;
 
-
 /**
  * spring 自动装配
  * 
@@ -32,8 +31,8 @@ import io.github.wendy512.redis.core.RedisTemplateClusterExtension;
  */
 @ComponentScan("io.github.wendy512.redis")
 @Configuration
-public class RedisFrameworkAutoConfiguration {
-    private static AtomicBoolean INITIALIZED = new AtomicBoolean(false);
+public class RedisStarterAutoConfiguration {
+    private AtomicBoolean INITIALIZED = new AtomicBoolean(false);
     public static final String DEFAULT_INSTANCE_KEY = "default";
     private DefaultListableBeanFactory beanFactory;
 
@@ -59,8 +58,8 @@ public class RedisFrameworkAutoConfiguration {
                 instances.put(DEFAULT_INSTANCE_KEY, redisTemplateConfig.getInstance());
             }
             Set<Map.Entry<String, InstanceConfig>> entries = instances.entrySet();
-            for (Map.Entry<String, InstanceConfig> e : entries) {
-                InstanceConfig instance = e.getValue();
+            for (Map.Entry<String, InstanceConfig> entry : entries) {
+                InstanceConfig instance = entry.getValue();
                 RedisMode mode;
                 if (instance.isEnableCluster()) {
                     mode = RedisMode.CLUSTER;
@@ -69,37 +68,46 @@ public class RedisFrameworkAutoConfiguration {
                 } else {
                     mode = RedisMode.SINGLE;
                 }
-                RedisConnectionFactory connectionFactory = createConnectionFactory(e.getKey(), instance, mode);
-                context.putRedisConnectionFactory(e.getKey(), connectionFactory);
+                RedisConnectionFactory connectionFactory = createConnectionFactory(entry.getKey(), instance, mode);
+                context.putRedisConnectionFactory(entry.getKey(), connectionFactory);
 
-                RedisTemplateClusterExtension redisTemplateCluster = createRedisTemplateBean(connectionFactory, e.getKey(), instance);
-                context.putRedisTemplate(e.getKey(), redisTemplateCluster);
+                RedisTemplateClusterExtension redisTemplateCluster =
+                    createRedisTemplateBean(connectionFactory, entry.getKey(), instance);
+                context.putRedisTemplate(entry.getKey(), redisTemplateCluster);
             }
         }
 
         return context;
     }
 
-    private RedisTemplateClusterExtension createRedisTemplateBean(RedisConnectionFactory connectionFactory, String name, InstanceConfig instance) throws Exception {
+    private RedisTemplateClusterExtension createRedisTemplateBean(RedisConnectionFactory connectionFactory, String name,
+        InstanceConfig instance) throws Exception {
         RedisTemplateClusterExtension redisTemplateCluster = new RedisTemplateClusterExtension();
         if (instance.isEnableCluster()) {
-            RedisClusterSupportHolder clusterSupportHolder = new RedisClusterSupportHolder(connectionFactory, redisTemplateConfig.getPool());
+            RedisClusterSupportHolder clusterSupportHolder =
+                new RedisClusterSupportHolder(connectionFactory, redisTemplateConfig.getPool());
             redisTemplateCluster.setClusterSupportHolder(clusterSupportHolder);
         }
         redisTemplateCluster.setConnectionFactory(connectionFactory);
-        redisTemplateCluster.setKeySerializer((RedisSerializer)Class.forName(instance.getKeySerializer()).newInstance());
-        redisTemplateCluster.setValueSerializer((RedisSerializer)Class.forName(instance.getValueSerializer()).newInstance());
-        redisTemplateCluster.setHashKeySerializer((RedisSerializer)Class.forName(instance.getHashKeySerializer()).newInstance());
-        redisTemplateCluster.setHashValueSerializer((RedisSerializer)Class.forName(instance.getHashValueSerializer()).newInstance());
+        redisTemplateCluster
+            .setKeySerializer((RedisSerializer)Class.forName(instance.getKeySerializer()).newInstance());
+        redisTemplateCluster
+            .setValueSerializer((RedisSerializer)Class.forName(instance.getValueSerializer()).newInstance());
+        redisTemplateCluster
+            .setHashKeySerializer((RedisSerializer)Class.forName(instance.getHashKeySerializer()).newInstance());
+        redisTemplateCluster
+            .setHashValueSerializer((RedisSerializer)Class.forName(instance.getHashValueSerializer()).newInstance());
         redisTemplateCluster.setPoolConfig(redisTemplateConfig.getPool());
         redisTemplateCluster.afterPropertiesSet();
         return redisTemplateCluster;
     }
 
-
     private RedisConnectionFactory createConnectionFactory(String name, InstanceConfig instance, RedisMode mode) {
-        return RedisConnectionFactoryBuilder.builder().mode(mode).clientName(name)
-                .poolConfig(redisTemplateConfig.getPool()).instanceConfig(instance).build();
+        return RedisConnectionFactoryBuilder.builder().mode(mode)
+                .clientName(name)
+                .poolConfig(redisTemplateConfig.getPool())
+                .enableNodeMapping(instance.isEnableNodeMapping())
+                .instanceConfig(instance).build();
     }
 
     private void validate() {

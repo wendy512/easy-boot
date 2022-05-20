@@ -1,11 +1,11 @@
-package io.github.wendy512.common.serialization.impl;
+package io.github.wendy512.serialization.protostuff;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import io.github.wendy512.common.serialization.SerializationException;
-import io.github.wendy512.common.serialization.Serializer;
+import io.github.wendy512.serialization.SerializationException;
+import io.github.wendy512.serialization.Serializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
@@ -17,7 +17,7 @@ import io.protostuff.runtime.RuntimeSchema;
  * @date 2021-05-18 13:52:13:52
  * @since 1.0.0
  */
-public class ProtoStuffSerializer<T> implements Serializer<T> {
+public class ProtoStuffSerializer implements Serializer {
 
     //将数据封装
     private static final Set<Class<?>> WRAPPER_SET = new HashSet<>();
@@ -59,7 +59,7 @@ public class ProtoStuffSerializer<T> implements Serializer<T> {
     }
 
     @Override
-    public byte[] serialize(T t) throws SerializationException {
+    public <T> byte[] serialize(T t) throws SerializationException {
         //获取序列化对象
         Class<T> clazz = (Class<T>) t.getClass();
         //设置缓数组缓冲区
@@ -85,7 +85,7 @@ public class ProtoStuffSerializer<T> implements Serializer<T> {
     }
 
     @Override
-    public T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws SerializationException {
         //判断是否是不可序列化对象，若是不能序列化对象，将对象进行包装
         if (WRAPPER_SET.contains(clazz)) {
             SerializeDeserializeWrapper<T> wrapper = new SerializeDeserializeWrapper<>();
@@ -98,6 +98,11 @@ public class ProtoStuffSerializer<T> implements Serializer<T> {
             ProtostuffIOUtil.mergeFrom(bytes, instance, schema);
             return instance;
         }
+    }
+
+    @Override
+    public <T> T deserialize(byte[] bytes) throws SerializationException {
+        throw new UnsupportedOperationException();
     }
 
     //静态内部类

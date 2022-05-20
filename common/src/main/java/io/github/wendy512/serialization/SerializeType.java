@@ -1,4 +1,4 @@
-package io.github.wendy512.common.serialization;
+package io.github.wendy512.serialization;
 
 /**
  * 序列化方式

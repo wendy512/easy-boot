@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class NodeConfig {
     private String node;
+    /**
+     * 容器中的节点IP和Port，为了解决获取集群节点时IP隐射问题
+     */
+    private String containerNode;
 }

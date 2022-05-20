@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactoryExtension;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +32,7 @@ public class RedisConnectionFactoryBuilder {
         private String clientName;
         private PoolConfig pool;
         private InstanceConfig instance;
+        private boolean enableNodeMapping;
 
         public $RedisConnectionFactoryBuilder mode(RedisMode mode) {
             this.mode = mode;
@@ -49,6 +51,11 @@ public class RedisConnectionFactoryBuilder {
 
         public $RedisConnectionFactoryBuilder instanceConfig(InstanceConfig instance) {
             this.instance = instance;
+            return this;
+        }
+
+        public $RedisConnectionFactoryBuilder enableNodeMapping(boolean enableNodeMapping) {
+            this.enableNodeMapping = enableNodeMapping;
             return this;
         }
 
@@ -86,7 +93,7 @@ public class RedisConnectionFactoryBuilder {
 
         private JedisConnectionFactory createSingleRedisConnectionFactory() {
             RedisStandaloneConfiguration config = getRedisStandaloneConfiguration();
-            return new JedisConnectionFactory(config, getJedisClientConfiguration());
+            return new JedisConnectionFactoryExtension(config, getJedisClientConfiguration());
         }
 
         private RedisStandaloneConfiguration getRedisStandaloneConfiguration() {
@@ -113,13 +120,20 @@ public class RedisConnectionFactoryBuilder {
         }
 
         private JedisConnectionFactory createSentinelRedisConnectionFactory() {
-            Assert.notNull(instance.getSentinelNodes(), "redis.instances.xx.sentinelNodes 配置不能为空");
+            Assert.notNull(instance.getNodes(), "redis.instances.xx.nodes 配置不能为空");
             RedisSentinelConfiguration config = getRedisSentinelConfiguration();
-            return new JedisConnectionFactory(config, getJedisClientConfiguration());
+            JedisConnectionFactory connectionFactory = null;
+            if (enableNodeMapping) {
+                connectionFactory = new JedisConnectionFactoryExtension(config, getJedisClientConfiguration());
+                ((JedisConnectionFactoryExtension) connectionFactory).setNodeConfig(instance.getNodes());
+            } else {
+                connectionFactory = new JedisConnectionFactory(config, getJedisClientConfiguration());
+            }
+            return connectionFactory;
         }
 
         private RedisSentinelConfiguration getRedisSentinelConfiguration() {
-            List<NodeConfig> sentinelNodes = instance.getSentinelNodes();
+            List<NodeConfig> sentinelNodes = instance.getNodes();
             Set<String> sentinelHostAndPorts =
                 sentinelNodes.stream().map(s -> s.getNode().trim()).collect(Collectors.toSet());
             RedisSentinelConfiguration config =
@@ -130,12 +144,19 @@ public class RedisConnectionFactoryBuilder {
 
         private JedisConnectionFactory createClusterConnectionFactory() {
             RedisClusterConfiguration config = getRedisClusterConfiguration();
-            return new JedisConnectionFactory(config, getJedisClientConfiguration());
+            JedisConnectionFactory connectionFactory = null;
+            if (enableNodeMapping) {
+                connectionFactory = new JedisConnectionFactoryExtension(config, getJedisClientConfiguration());
+                ((JedisConnectionFactoryExtension) connectionFactory).setNodeConfig(instance.getNodes());
+            } else {
+                connectionFactory = new JedisConnectionFactory(config, getJedisClientConfiguration());
+            }
+            return connectionFactory;
         }
 
         private RedisClusterConfiguration getRedisClusterConfiguration() {
             Set<String> clusterNodes =
-                instance.getClusterNodes().stream().map(s -> s.getNode().trim()).collect(Collectors.toSet());
+                instance.getNodes().stream().map(s -> s.getNode().trim()).collect(Collectors.toSet());
             RedisClusterConfiguration config = new RedisClusterConfiguration(clusterNodes);
             config.setPassword(instance.getPassword());
             return config;

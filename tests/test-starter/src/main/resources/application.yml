@@ -6,3 +6,47 @@ server:
 spring:
   application:
     name: test-springboot
+
+easyboot:
+  redis:
+    instances:
+      single:
+        host: 192.168.139.128
+        port: 6379
+        database: 0
+        password: root123
+        timeout: 10000
+        keySerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+        valueSerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+      #sentinel:
+      #  enableSentinel: true
+      #  password: root
+      #  timeout: 10000
+      #  keySerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+      #  valueSerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+      #  master: mymaster
+      #  database: 0
+      #  sentinelNodes:
+      #    - node: 192.168.96.82:26380
+      #    - node: 192.168.96.82:26381
+      #    - node: 192.168.96.81:26379
+      cluster:
+        enableCluster: true
+        enableNodeMapping: true
+        password: StarYea123
+        timeout: 10000
+        keySerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+        valueSerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+        nodes:
+          - node: 192.168.139.128:7001
+            containerNode: 172.38.1.1:6379
+          - node: 192.168.139.128:7002
+            containerNode: 172.38.1.2:6379
+          - node: 192.168.139.128:7003
+            containerNode: 172.38.1.3:6379
+          - node: 192.168.139.128:7004
+            containerNode: 172.38.1.4:6379
+          - node: 192.168.139.128:7005
+            containerNode: 172.38.1.5:6379
+          - node: 192.168.139.128:7006
+            containerNode: 172.38.1.6:6379

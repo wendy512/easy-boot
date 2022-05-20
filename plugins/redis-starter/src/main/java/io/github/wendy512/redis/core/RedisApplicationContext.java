@@ -18,12 +18,12 @@ public class RedisApplicationContext {
     private final Map<String, RedisConnectionFactory> CONNECTION_FACTORIES = new ConcurrentHashMap<>();
     public static final String DEFAULT_NAME = "default";
 
-    public RedisTemplate getRedisTemplate(String name) {
-        return TEMPLATES.get(name);
+    public RedisTemplate getRedisTemplate(String instanceName) {
+        return TEMPLATES.get(instanceName);
     }
 
-    public RedisConnectionFactory getRedisConnectionFactory(String name) {
-        return CONNECTION_FACTORIES.get(name);
+    public RedisConnectionFactory getRedisConnectionFactory(String instanceName) {
+        return CONNECTION_FACTORIES.get(instanceName);
     }
 
     public RedisTemplate getRedisTemplate() {
@@ -34,12 +34,12 @@ public class RedisApplicationContext {
         return CONNECTION_FACTORIES.get(DEFAULT_NAME);
     }
 
-    public void putRedisTemplate(String name, RedisTemplate redisTemplate) {
-        TEMPLATES.put(name, redisTemplate);
+    public void putRedisTemplate(String instanceName, RedisTemplate redisTemplate) {
+        TEMPLATES.put(instanceName, redisTemplate);
     }
 
-    public void putRedisConnectionFactory(String name, RedisConnectionFactory connectionFactory) {
-        CONNECTION_FACTORIES.put(name, connectionFactory);
+    public void putRedisConnectionFactory(String instanceName, RedisConnectionFactory connectionFactory) {
+        CONNECTION_FACTORIES.put(instanceName, connectionFactory);
     }
 
 }

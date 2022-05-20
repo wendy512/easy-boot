@@ -25,11 +25,12 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-io.version>2.8.0</commons-io.version>
-        <jedis.version>3.6.0</jedis.version>
+        <jedis.version>2.9.3</jedis.version>
         <kryo.version>5.0.0</kryo.version>
-        <hessian.version>4.0.38</hessian.version>
+        <hessian.version>4.0.66</hessian.version>
         <protostuff.version>1.7.2</protostuff.version>
         <fastjson2.version>2.0.2</fastjson2.version>
+        <snappy.version>1.1.8.4</snappy.version>
     </properties>
     
     
@@ -171,6 +172,11 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

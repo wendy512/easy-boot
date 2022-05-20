@@ -13,7 +13,7 @@ import lombok.Data;
  * @date 2021-04-25 14:41:14:41
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = "tom-framework.redis")
+@ConfigurationProperties(prefix = "easyboot.redis")
 @Configuration
 @Data
 public class RedisTemplateConfig {

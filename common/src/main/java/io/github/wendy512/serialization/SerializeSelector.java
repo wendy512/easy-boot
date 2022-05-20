@@ -1,9 +1,13 @@
-package io.github.wendy512.common.serialization;
+package io.github.wendy512.serialization;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.wendy512.common.serialization.impl.*;
+import io.github.wendy512.serialization.hessian.HessianSerializer;
+import io.github.wendy512.serialization.jdk.JdkSerializer;
+import io.github.wendy512.serialization.json.JsonSerializer;
+import io.github.wendy512.serialization.kryo.KryoSerializer;
+import io.github.wendy512.serialization.protostuff.ProtoStuffSerializer;
 
 /**
  * 序列化选择器
@@ -13,8 +17,7 @@ import io.github.wendy512.common.serialization.impl.*;
  */
 public final class SerializeSelector {
     private SerializeSelector() {}
-    private static Map<SerializeType, Serializer> CACHE_SERIALIZER = new HashMap<>();
-    private volatile static SerializeSelector INSTANCE;
+    private static Map<SerializeType, Serializer> CACHE_SERIALIZER = new HashMap<>(5);
     
     static {
         CACHE_SERIALIZER.put(SerializeType.HESSIAN, new HessianSerializer());
