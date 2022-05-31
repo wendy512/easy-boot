@@ -11,6 +11,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>redis-starter</module>
+        <module>webx-starter</module>
+        <module>mybatis-plus-starter</module>
     </modules>
 
     <artifactId>easy-boot-plugins</artifactId>

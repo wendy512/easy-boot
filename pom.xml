@@ -13,8 +13,8 @@
         <module>logging</module>
         <module>dependencies</module>
         <module>common</module>
+        <module>sso</module>
         <module>tests</module>
-        <module>tests/test-starter</module>
     </modules>
 
     <name>easy boot</name>

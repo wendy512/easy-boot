@@ -1,0 +1,46 @@
+server:
+  port: 9092
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: test-springboot
+  datasource:
+    url: jdbc:mysql://centos7-app1:3306/sso?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&allowMultiQueries=true&autoReconnect=true
+    username: root
+    password: root123
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      # 连接超时时间(ms)
+      connection-timeout: 10000
+      # 连接空闲时间(ms)
+      idle-timeout: 60000
+      # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired）
+      max-lifetime: 1800000
+      # 最小空闲连接数
+      minimum-idle: 1
+      # 控制池允许访问的最大大小，包括空闲和正在使用的连接
+      maximum-pool-size: 100
+
+mybatis-plus:
+  config-location: classpath:/config/mybatis/mybatis-config.xml
+  mapper-locations: classpath*:/config/mybatis/mapper/**/*Mapper.xml
+
+easy-boot:
+  redis:
+    instance:
+      host: 192.168.139.128
+      port: 6379
+      database: 0
+      password: root123
+      timeout: 10000
+      keySerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+      valueSerializer: org.springframework.data.redis.serializer.StringRedisSerializer
+  # oauth2 配置
+  sso:
+    tokenStore: redis
+    resourceId: sso-resource
+    verifyCode:
+      enable: false

@@ -25,5 +25,9 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-access</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.wendy512</groupId>
+            <artifactId>easy-boot-common</artifactId>
+        </dependency>
     </dependencies>
 </project>

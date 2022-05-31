@@ -25,9 +25,9 @@ import org.springframework.data.redis.connection.*;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import io.github.wendy512.redis.config.NodeConfig;
-import io.github.wendy512.redis.core.JedisClusterExtension;
-import io.github.wendy512.redis.core.RedisClusterConnectionProxy;
+import io.github.wendy512.easyboot.redis.config.NodeConfig;
+import io.github.wendy512.easyboot.redis.core.extension.JedisClusterExtension;
+import io.github.wendy512.easyboot.redis.core.proxy.RedisClusterConnectionProxy;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPoolConfig;

@@ -3,13 +3,14 @@
     <springProperty name="logHome" source="easyboot.logging.logHome" defaultValue="./"/>
     <springProperty name="maxHistory" source="easyboot.logging.maxHistory" defaultValue="7"/>
     <springProperty name="maxFileSize" source="easyboot.logging.maxFileSize" defaultValue="1GB"/>
+    <conversionRule conversionWord="traceId" converterClass="io.github.wendy512.easyboot.logging.convert.TracePropertyConvert" />
     
-    <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{15} - %msg%n"/>
+    <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss} [%thread][%traceId] %-5level %logger{15} - %msg%n"/>
     <property name="logHome" value="${logHome:-./}"/>
     <property name="maxHistory" value="${maxHistory:-7}"/>
     <property name="maxFileSize" value="${maxFileSize:-1GB}"/>
     <property name="appName" value="${appName:-default}"/>
-    <contextListener class="io.github.easyboot.logging.util.LogContextUtil"/>
+    <contextListener class="io.github.wendy512.easyboot.logging.util.LogContextUtil"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -106,6 +107,9 @@
     </appender>
 
     <logger name="org" level="ERROR">
+        <appender-ref ref="ERROR_FILE"/>
+    </logger>
+    <logger name="com.zaxxer" level="ERROR">
         <appender-ref ref="ERROR_FILE"/>
     </logger>
     <logger name="com.alibaba" level="ERROR">

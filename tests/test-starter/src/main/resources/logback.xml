@@ -2,11 +2,16 @@
 <configuration scan="true" scanPeriod="300 seconds" debug="false">
     <property name="appName" value="test-springboot"/>
     <contextName>test-springboot</contextName>
-
     <include resource="logback-spring-base.xml"/>
 
     <springProfile name="dev,default">
-        <logger name="io.github.easyboot" level="INFO">
+        <logger name="io.github.wendy512" level="INFO">
+            <!-- 输出到上面配置的对应的输出流中 -->
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+        <logger name="io.github.wendy512.easyboot.test.dao" level="DEBUG">
             <!-- 输出到上面配置的对应的输出流中 -->
             <appender-ref ref="DEBUG_FILE"/>
             <appender-ref ref="INFO_FILE"/>

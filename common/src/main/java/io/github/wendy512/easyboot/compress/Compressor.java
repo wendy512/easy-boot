@@ -1,0 +1,62 @@
+/**
+ * Copyright wendy512@yeah.net
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.github.wendy512.easyboot.compress;
+
+import java.io.IOException;
+
+/**
+ * 统一压缩接口
+ * @author wendy512
+ * @date 2022-05-20 17:43:55
+ * @since 1.0.0
+ */
+public interface Compressor {
+
+    public static final int CACHE_SIZE = 8192;
+    
+    byte[] compress(byte[] input) throws IOException;
+
+    byte[] compress(char[] input) throws IOException;
+    
+    byte[] compress(double[] input) throws IOException;
+
+    byte[] compress(float[] input) throws IOException;
+
+    byte[] compress(int[] input) throws IOException;
+
+    byte[] compress(long[] input) throws IOException;
+
+    byte[] compress(short[] input) throws IOException;
+
+    byte[] compress(String s) throws IOException;
+
+    byte[] unCompress(byte[] input) throws IOException;
+
+    char[] unCompressCharArray(byte[] input) throws IOException;
+
+    double[] unCompressDoubleArray(byte[] input) throws IOException;
+
+    float[] unCompressFloatArray(byte[] input) throws IOException;
+
+    int[] unCompressIntArray(byte[] input) throws IOException;
+
+    long[] unCompressLongArray(byte[] input) throws IOException;
+
+    short[] unCompressShortArray(byte[] input) throws IOException;
+
+    String unCompressString(byte[] input) throws IOException;
+}

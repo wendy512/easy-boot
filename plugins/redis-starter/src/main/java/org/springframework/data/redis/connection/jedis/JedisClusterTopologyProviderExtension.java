@@ -25,7 +25,7 @@ import org.springframework.data.redis.connection.convert.Converters;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import io.github.wendy512.redis.config.NodeConfig;
+import io.github.wendy512.easyboot.redis.config.NodeConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;

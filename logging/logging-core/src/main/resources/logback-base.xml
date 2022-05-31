@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-  <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{0}.%method - %msg%n"/>
+  <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread][%traceId] %-5level %logger{0}.%method - %msg%n"/>
   <property name="maxHistory" value="${maxHistory:-7}"/>
   <property name="maxFileSize" value="${maxFileSize:-1GB}"/>
   <property name="appName" value="${appName:-default}"/>
   <property name="logHome" value="${logHome:-./}"/>
-
+  <conversionRule conversionWord="traceId" converterClass="io.github.wendy512.easyboot.logging.convert.TracePropertyConvert" />
+  
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>TRACE</level>
